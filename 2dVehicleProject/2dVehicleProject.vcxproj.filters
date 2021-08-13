@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Car.cpp" />
+    <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="Wheel.cpp" />
+    <ClCompile Include="Vec2d.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Car.h" />
+    <ClInclude Include="Utilities.h" />
+    <ClInclude Include="Wheel.h" />
+    <ClInclude Include="Vec2d.h" />
+  </ItemGroup>
+</Project>
