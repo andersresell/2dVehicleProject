@@ -12,20 +12,10 @@
 #include <tuple>
 
 int main() {
-	//Test section
-	Vec2d x{ 1,2 };
-	RotMat2d R{ 1.57 };
-	Vec2d y = R * x;
-	std::cout << y << std::endl
-		<< R << std::endl;
-
-	
-
-	//end test section 
 
 	auto win = std::make_unique<Fl_Double_Window>(screenWidth, screenHeight, "2dCar");
 	win->color(FL_WHITE);
-	
+
 
 
 	Car c{ 1000, carLength, carWidth, Vec2d{300,300} };
@@ -44,7 +34,7 @@ int main() {
 		Fl::check();
 		Fl::redraw();
 	}
-	
-	
-	
+
+
+
 }
