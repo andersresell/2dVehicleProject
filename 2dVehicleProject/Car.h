@@ -20,5 +20,5 @@ protected:
 public:
 	Car(double M, int Length, int Width, Vec2d x0); //Constructing car with Cm in center
 	virtual void draw() override final;
-	//double calcTorque() const; //Calculates the torque from wheelspeeds and horsepower
+	//double calcTorque() const; //Calculates the torque from wheelspeeds and horsepower.
 };
