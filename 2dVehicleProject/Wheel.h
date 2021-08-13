@@ -23,7 +23,7 @@ public:
 	virtual void userInput() = 0;
 	void drawWheel();
 	void updateForce();
-	void updateWheelState(const KinData& vehicleKinData);//updates kinamtic data and wheel speed
+	void updateWheelState(const KinData& vehicleKinData);//updates kinematic data and wheel speed
 	Vec2d getForce() const { return force; }
 	Vec2d getOffset() const { return offset; }
 };

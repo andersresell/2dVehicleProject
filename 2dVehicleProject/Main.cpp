@@ -13,14 +13,7 @@
 
 int main() {
 	//Test section
-	Vec2d x{ 1,2 };
-	RotMat2d R{ 1.57 };
-	Vec2d y = R * x;
-	std::cout << y << std::endl
-		<< R << std::endl;
-
 	
-
 	//end test section 
 
 	auto win = std::make_unique<Fl_Double_Window>(screenWidth, screenHeight, "2dCar");
