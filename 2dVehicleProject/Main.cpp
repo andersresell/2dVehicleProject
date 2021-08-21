@@ -20,8 +20,8 @@ int main() {
 	win->color(FL_WHITE);
 	
 
-
-	Car c{ carMass, carLength, carWidth, wheelRadius, wheelWidth, Vec2d{10,10}, -90};
+	Car c{ carMass, carLength, carWidth, wheelRadius, wheelWidth, Vec2d{10,10}, -90 };
+	//RWD_Car c{ carMass, carLength, carWidth, wheelRadius, wheelWidth, Vec2d{10,10}, -90};
 	win->end();
 	win->show();
 

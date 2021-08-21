@@ -3,6 +3,7 @@
 #include "FL/Fl.H"
 #include <iostream>
 #include <iomanip> 
+#include "Car.h"
 
 constexpr double mu{ 0.8 };
 constexpr double maxForce = mu * 9.81 * carMass / 4; 
@@ -10,7 +11,7 @@ constexpr int wheelMass{ 20 }; //only used for calculating inertia, doesnt contr
 
 struct WheelStateVec { 
 	double omegaWh;
-	Vec2d speed;
+	Vec2d velocity;
 	double theta;
 };
 
@@ -34,6 +35,7 @@ public:
 	Wheel(double R, double wheelWidth, Vec2d offset, double theta, std::string wheelLoc);
 	void setSteeringAngle(int angle) { steeringAngle = angle; }
 	void setTorque(double torqueInput) { torque = torqueInput; }
+	void addTorque(double torqueInput) { torque += torqueInput; }
 	void setForce(Vec2d inputForce) { force = inputForce; }
 	Vec2d getForce() const { return force; }
 	void update( double dt, const KinData& vehicleKinData, Vec2d force);
@@ -41,6 +43,7 @@ public:
 	Vec2d calcForce();
 	Vec2d getOffset() const { return offset; }
 	void lockWheel() { wheelState.omegaWh = 0; }
+	double getWheelRotation() { return wheelState.omegaWh; }
 
 	friend std::ostream& operator<<(std::ostream& os, const Wheel& rhs);
 };

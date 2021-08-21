@@ -15,7 +15,7 @@ I{ 0.5 * wheelMass * R * R }, wheelBody{ wheelWidth , 2 * R , FL_BLACK }
 
 void Wheel::update( double dt, const KinData& vehicleKinData, Vec2d force) {
 	wheelState.omegaWh += dt * calcWheelAcc(vehicleKinData.theta, force);
-	wheelState.speed = vehicleKinData.v + localToGlobalVec(offset, vehicleKinData.theta).cross(vehicleKinData.omega);
+	wheelState.velocity = vehicleKinData.v + localToGlobalVec(offset, vehicleKinData.theta).cross(vehicleKinData.omega);
 	wheelState.theta = vehicleKinData.theta;
 }
 
@@ -24,7 +24,7 @@ void Wheel::drawWheel(Vec2d wheelCenter) {
 }
 
 Vec2d Wheel::calcForce() {
-	Vec2d vGround = calcRelativeGroundSpeed(wheelState.speed, angle2tangent(calcTotalAngle(wheelState.theta)), wheelState.omegaWh, R);
+	Vec2d vGround = calcRelativeGroundSpeed(wheelState.velocity, angle2tangent(calcTotalAngle(wheelState.theta)), wheelState.omegaWh, R);
 	Vec2d force = vGround * 1000; //2 is a randomly selected number
 	if (force.norm() > maxForce) {
 		force = vGround / vGround.norm() * maxForce;
@@ -41,5 +41,5 @@ std::ostream& operator<<(std::ostream& os, const Wheel& rhs) {//for debuging
 	Vec2d f{ rhs.getForce() };
 	return os << rhs.wheelLoc << ": f = " << f << " m = " << calcMoment(f, rhs.getOffset(), rhs.wheelState.theta)
 		<< " omega = " << rhs.wheelState.omegaWh << " relGrndSpeed = "
-		<< calcRelativeGroundSpeed(rhs.wheelState.speed, angle2tangent(rhs.wheelState.theta), rhs.wheelState.omegaWh, rhs.R) << std::endl;
+		<< calcRelativeGroundSpeed(rhs.wheelState.velocity, angle2tangent(rhs.wheelState.theta), rhs.wheelState.omegaWh, rhs.R) << std::endl;
 }

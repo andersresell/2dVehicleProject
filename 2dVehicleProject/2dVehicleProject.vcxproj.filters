@@ -6,11 +6,13 @@
     <ClCompile Include="Utilities.cpp" />
     <ClCompile Include="Wheel.cpp" />
     <ClCompile Include="Vec2d.cpp" />
+    <ClCompile Include="Engine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Car.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="Wheel.h" />
     <ClInclude Include="Vec2d.h" />
+    <ClInclude Include="Engine.h" />
   </ItemGroup>
 </Project>
