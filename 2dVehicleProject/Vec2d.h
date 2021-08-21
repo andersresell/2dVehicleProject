@@ -2,6 +2,7 @@
 
 #include <ostream>
 #include <math.h>
+#include <iomanip> 
 
 struct Vec2d {
 	//Two dimensional vector datatype
@@ -15,15 +16,13 @@ struct Vec2d {
 	Vec2d operator-(const Vec2d& rhs) const;
 	Vec2d operator*(double rhs) const;
 	Vec2d operator*(const Vec2d& rhs) const; //elementwise multiplication
+	void operator*=(double rhs);
 	Vec2d operator/(double rhs) const;
 	Vec2d cross(double zComp) const;
 	double cross(const Vec2d& rhs) const;
-	double abs() const;
-	Vec2d norm() const;
+	double norm() const;
 	double sum() const;
 	double dot(const Vec2d& rhs) const;
-
-
 	friend std::ostream& operator<<(std::ostream& os, const Vec2d& rhs);
 };
 

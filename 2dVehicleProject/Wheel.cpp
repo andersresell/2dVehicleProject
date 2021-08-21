@@ -1,66 +1,45 @@
 
 #include "Wheel.h"
 
-Wheel::Wheel(unsigned int R, unsigned int wheelWidth, Vec2d offset, const KinData& vehicleKinData) : R{ R }, 
-wheelWidth{ wheelWidth }, offset{ offset }, omegaWh{ 0 }, steeringAngle{0}, 
- I{0.5 * wheelMass * R * R}, wheelKinData{vehicleKinData.calcOffsetKinData(offset)},
-	wheelBody{wheelWidth, 2*R, FL_BLACK}
+double Wheel::calcWheelAcc(double theta, Vec2d force) { //return angular acceleration of the wheel
+	return (torque - force.dot(angle2tangent(calcTotalAngle(theta))) * R) / I;
+}
+
+
+Wheel::Wheel(double R, double wheelWidth, Vec2d offset, double theta, std::string wheelLoc) : R{ R }, 
+wheelWidth{ wheelWidth }, offset{ offset }, steeringAngle{ 0 }, torque{0}, force{0,0}, wheelLoc{wheelLoc},
+I{ 0.5 * wheelMass * R * R }, wheelBody{ wheelWidth , 2 * R , FL_BLACK }
 {
-
+	wheelState = {0,{0,0}, theta};
 }
 
-void Wheel::drawWheel() {
-	wheelBody.drawRectangle(wheelKinData.x, calcTotalAngle());
+void Wheel::update( double dt, const KinData& vehicleKinData, Vec2d force) {
+	wheelState.omegaWh += dt * calcWheelAcc(vehicleKinData.theta, force);
+	wheelState.speed = vehicleKinData.v + localToGlobalVec(offset, vehicleKinData.theta).cross(vehicleKinData.omega);
+	wheelState.theta = vehicleKinData.theta;
 }
 
-void Wheel::updateForce(){
-	Vec2d vGround = calcGroundSpeed(wheelKinData.v, angle2tangent(calcTotalAngle()), omegaWh, R);
-	force = vGround * 2; //2 is a randomly selected number
-	if (force.abs() > maxForce) {
-		force = vGround.norm() * maxForce;
+void Wheel::drawWheel(Vec2d wheelCenter) {
+	wheelBody.drawRectangle(wheelCenter, calcTotalAngle(wheelState.theta));
+}
+
+Vec2d Wheel::calcForce() {
+	Vec2d vGround = calcRelativeGroundSpeed(wheelState.speed, angle2tangent(calcTotalAngle(wheelState.theta)), wheelState.omegaWh, R);
+	Vec2d force = vGround * 1000; //2 is a randomly selected number
+	if (force.norm() > maxForce) {
+		force = vGround / vGround.norm() * maxForce;
 	}
-}
-
-void Wheel::updateWheelState(const KinData& vehicleKinData) {
-	wheelKinData = vehicleKinData.calcOffsetKinData(offset);
-	omegaWh += (torque - force.dot(angle2tangent(calcTotalAngle())) * R) * deltaTime; //explicit euler for the wheel speed
-}
-
-SteeringWheel::SteeringWheel(unsigned int R, unsigned int wheelWidth, Vec2d offset, const KinData& vehicleKinData) :
-	Wheel(R, wheelWidth, offset, vehicleKinData)
-{
-}
-
-void SteeringWheel::userInput() {
-	if (Fl::event_key(FL_Right)) {
-		steeringAngle = maxSteeringAngle;//Simple steering model for now
-	}
-	else if (Fl::event_key(FL_Left)) {
-		steeringAngle = -maxSteeringAngle;
-	}
-	else {
-		steeringAngle = 0;
-	}
-}
-
-DriveWheel::DriveWheel(unsigned int R, unsigned int wheelWidth, Vec2d offset, const KinData& vehicleKinData) : 
-	Wheel(R, wheelWidth, offset, vehicleKinData)
-{
-}
-void DriveWheel::userInput() {
-	if(Fl::event_key(FL_Up)) { 
-		torque = 100; //simple torque model for now
-	}
-	else if (Fl::event_key(FL_Down)) {
-		torque = -100;
-	}
-	else {
-		torque = 0;
-	}
+	return force;
 }
 
 
-Vec2d calcGroundSpeed(Vec2d v, Vec2d t, double omega, int R) {
-	return { v - t * (omega * R) };
+Vec2d calcRelativeGroundSpeed(Vec2d v, Vec2d t, double omega, double R) {
+	return { t * (omega * R) - v };
 }
 
+std::ostream& operator<<(std::ostream& os, const Wheel& rhs) {//for debuging
+	Vec2d f{ rhs.getForce() };
+	return os << rhs.wheelLoc << ": f = " << f << " m = " << calcMoment(f, rhs.getOffset(), rhs.wheelState.theta)
+		<< " omega = " << rhs.wheelState.omegaWh << " relGrndSpeed = "
+		<< calcRelativeGroundSpeed(rhs.wheelState.speed, angle2tangent(rhs.wheelState.theta), rhs.wheelState.omegaWh, rhs.R) << std::endl;
+}

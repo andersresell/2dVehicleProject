@@ -2,7 +2,7 @@
 #include "Vec2d.h"
 
 std::ostream& operator<<(std::ostream& os, const Vec2d& rhs) {
-	return os << "[" << rhs.x1 << ", " << rhs.x2 << "]";
+	return os << "["  << rhs.x1 << ", " << rhs.x2 << "]";
 }
 
 Vec2d Vec2d::operator+(const Vec2d& rhs) const {
@@ -26,6 +26,11 @@ Vec2d Vec2d::operator*(const Vec2d& rhs) const {
 	return { x1 * rhs.x1, x2 * rhs.x2 };
 }
 
+void Vec2d::operator*=(double rhs) {
+	x1 *= rhs;
+	x2 *= rhs;
+}
+
 Vec2d Vec2d::operator/(double rhs) const {
 	return { x1 / rhs, x2 / rhs };
 }
@@ -39,13 +44,8 @@ double Vec2d::cross(const Vec2d& rhs) const {
 	return x1 * rhs.x2 - x2 * rhs.x1;
 }
 
-double Vec2d::abs() const {
+double Vec2d::norm() const {
 	return sqrt(x1 * x1 + x2 * x2);
-}
-
-Vec2d Vec2d::norm() const {
-	//
-	return *this / this->abs();
 }
 
 Vec2d Mat2d::operator*(const Vec2d& rhs) const {

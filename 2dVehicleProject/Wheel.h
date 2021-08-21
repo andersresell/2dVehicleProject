@@ -1,44 +1,48 @@
 #pragma once
 #include "Utilities.h"
 #include "FL/Fl.H"
+#include <iostream>
+#include <iomanip> 
 
-constexpr int maxForce = 100; //random
+constexpr double mu{ 0.8 };
+constexpr double maxForce = mu * 9.81 * carMass / 4; 
 constexpr int wheelMass{ 20 }; //only used for calculating inertia, doesnt contribute to vehicle mass
 
+struct WheelStateVec { 
+	double omegaWh;
+	Vec2d speed;
+	double theta;
+};
+
 class Wheel { 
-protected:
-	const unsigned int R; //Wheel radius
-	const unsigned int wheelWidth;
-	const double I; //inertia
+private:
+	const double R; //Wheel radius
+	const double wheelWidth;
+	const double I; //second moment of inertia
 	const Vec2d offset; //Local offset
-	KinData wheelKinData; //does not include the steering angle
-	Vec2d force; //Force from ground to wheels
-	double omegaWh; //Wheel rotation speed
-	double torque; //Applied torque
-	int steeringAngle;
+	//KinData wheelKinData; //at t_n. does not include the steering angle
+	//double omegaWh; //Wheel rotation speed at t_n
+	WheelStateVec wheelState;
+	int steeringAngle; //constant during entire timestep
+	double torque; //constant during entire timestep
+	Vec2d force; //constant during entire timestep
 	RecShape wheelBody;
-	double calcTotalAngle() { return wheelKinData.theta + deg2rad(steeringAngle); }
-	Wheel(unsigned int R, unsigned int wheelWidth, Vec2d offset, const KinData& vehicleKinData);
+	double calcTotalAngle(double theta) { return theta + deg2rad(steeringAngle); }
+	double calcWheelAcc(double theta, Vec2d force);
 public:
-	virtual void userInput() = 0;
-	void drawWheel();
-	void updateForce();
-	void updateWheelState(const KinData& vehicleKinData);//updates kinematic data and wheel speed
+	const std::string wheelLoc;
+	Wheel(double R, double wheelWidth, Vec2d offset, double theta, std::string wheelLoc);
+	void setSteeringAngle(int angle) { steeringAngle = angle; }
+	void setTorque(double torqueInput) { torque = torqueInput; }
+	void setForce(Vec2d inputForce) { force = inputForce; }
 	Vec2d getForce() const { return force; }
+	void update( double dt, const KinData& vehicleKinData, Vec2d force);
+	void drawWheel(Vec2d wheelCenter);
+	Vec2d calcForce();
 	Vec2d getOffset() const { return offset; }
+	void lockWheel() { wheelState.omegaWh = 0; }
+
+	friend std::ostream& operator<<(std::ostream& os, const Wheel& rhs);
 };
 
-class SteeringWheel : public Wheel {
-	static const int maxSteeringAngle{ 15 };
-public :
-	SteeringWheel(unsigned int R, unsigned int wheelWidth, Vec2d offset, const KinData& vehicleKinData);
-	void userInput() override final;
-};
-
-class DriveWheel : public Wheel {
-public:
-	DriveWheel(unsigned int R, unsigned int wheelWidth, Vec2d offset, const KinData& vehicleKinData);
-	void userInput() override final;
-};
-
-Vec2d calcGroundSpeed(Vec2d v, Vec2d t, double omega, int R);
+Vec2d calcRelativeGroundSpeed(Vec2d v, Vec2d t, double omega, double R);

@@ -21,18 +21,16 @@ int main() {
 	
 
 
-	Car c{ 1000, carLength, carWidth, Vec2d{300,300} };
-
+	Car c{ carMass, carLength, carWidth, wheelRadius, wheelWidth, Vec2d{10,10}, -90};
 	win->end();
 	win->show();
 
 	using namespace std::literals::chrono_literals;
 	auto nextDrawing = std::chrono::steady_clock::now();
-	int n{ 0 };
+
 	while (win->shown()) {
 		std::this_thread::sleep_until(nextDrawing);
 		nextDrawing += std::chrono::microseconds(16ms); //hopefully 60 fps
-		std::cout << n++ << std::endl;
 
 		Fl::check();
 		Fl::redraw();
