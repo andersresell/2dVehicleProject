@@ -11,10 +11,9 @@
 
 
 class Car : public Fl_Widget {
-private:
+protected:
 	Engine engine;
 	static const int maxSteeringAngle{ 30 };
-	int steeringAngle;
 	const double M; //Mass
 	const double I; //Inertia
 	double Length;
@@ -22,7 +21,6 @@ private:
 	Vec2d Cm; 
 	KinData vehicleKinData;
 	RecShape carBody;
-	Wheel w;
 	std::vector<std::shared_ptr<Wheel>> wheels; // to loop over wheels
 	std::shared_ptr<Wheel> frontRight;
 	std::shared_ptr<Wheel> frontLeft;
@@ -31,19 +29,19 @@ private:
 
 
 	void steer();
-	//virtual void accelerate();// = 0; //Defined based on the drivetrain of the car
+	virtual void accelerate() = 0; //Defined based on the drivetrain of the car
 	void brake();
 	void handbrake();
 public:
 	Car(double M, double Length, double Width, double wheelRadius, double wheelWidth, Vec2d x0, int initialAngle = 0); //Constructing car with Cm in center
 	virtual void draw() override final;
 };
-/*
+
 class RWD_Car : public Car {
 private:
 
 public:
 	RWD_Car(double M, double Length, double Width, double wheelRadius, double wheelWidth, Vec2d x0, int initialAngle = 0);
-	//void accelerate() override final;
+	void accelerate() override final;
 };
-*/
+
