@@ -57,7 +57,6 @@ void Car::handbrake() {
 	}
 }
 
-
 void Car::draw() {
 	using namespace std;
 
@@ -65,19 +64,7 @@ void Car::draw() {
 	handbrake();
 	accelerate();
 	brake();
-	
-	/*
-	double torque = 0;
-	if (Fl::event_key(FL_Up)) {
-		torque = 1000;
-	}
-	if (Fl::event_key(FL_Down)) {
-		torque -= 1000;
-	}
-	rearLeft->setTorque(torque);
-	rearRight->setTorque(torque);*/
-	
-
+	//cout << vehicleKinData.x << endl;
 	Vec2d tmpForce, totalForce{ 0,0 };
 	double totalMoment{ 0 };
 	for (auto& wheel : wheels) {
@@ -87,7 +74,8 @@ void Car::draw() {
 		totalMoment += calcMoment(tmpForce, wheel->getOffset(), vehicleKinData.theta);
 
 	}
-	cout << endl;
+	//cout << totalForce << endl;
+	//cout << endl;
 	vehicleKinData.x += vehicleKinData.v * deltaTime;
 	vehicleKinData.v += totalForce * deltaTime / M;
 	vehicleKinData.theta = fmod(vehicleKinData.theta + vehicleKinData.omega * deltaTime, 2*M_PI);

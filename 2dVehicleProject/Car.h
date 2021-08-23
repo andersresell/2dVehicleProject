@@ -27,11 +27,11 @@ protected:
 	std::shared_ptr<Wheel> rearRight;
 	std::shared_ptr<Wheel> rearLeft;
 
-
 	void steer();
 	virtual void accelerate() = 0; //Defined based on the drivetrain of the car
 	void brake();
 	void handbrake();
+	void calcNormalForces(); //calculates and sets the normal forces acting on each wheel
 public:
 	Car(double M, double Length, double Width, double wheelRadius, double wheelWidth, Vec2d x0, int initialAngle = 0); //Constructing car with Cm in center
 	virtual void draw() override final;

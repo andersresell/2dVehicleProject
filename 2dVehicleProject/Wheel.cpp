@@ -24,9 +24,10 @@ void Wheel::drawWheel(Vec2d wheelCenter) {
 }
 
 Vec2d Wheel::calcForce() {
+	normalForce = maxForce; //placeholder
 	Vec2d vGround = calcRelativeGroundSpeed(wheelState.velocity, angle2tangent(calcTotalAngle(wheelState.theta)), wheelState.omegaWh, R);
-	Vec2d force = vGround * 1000; //2 is a randomly selected number
-	if (force.norm() > maxForce) {
+	Vec2d force = vGround *normalForce * 2.4; //randomly selected tire model
+	if (force.norm() > normalForce * mu) {
 		force = vGround / vGround.norm() * maxForce;
 	}
 	return force;

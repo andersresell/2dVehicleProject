@@ -20,12 +20,11 @@ private:
 	const double wheelWidth;
 	const double I; //second moment of inertia
 	const Vec2d offset; //Local offset
-	//KinData wheelKinData; //at t_n. does not include the steering angle
-	//double omegaWh; //Wheel rotation speed at t_n
 	WheelStateVec wheelState;
 	int steeringAngle; //constant during entire timestep
 	double torque; //constant during entire timestep
 	Vec2d force; //constant during entire timestep
+	double normalForce; //constant during entire timestep
 	RecShape wheelBody;
 	double calcTotalAngle(double theta) { return theta + deg2rad(steeringAngle); }
 	double calcWheelAcc(double theta, Vec2d force);
@@ -35,7 +34,6 @@ public:
 	void setSteeringAngle(int angle) { steeringAngle = angle; }
 	void setTorque(double torqueInput) { torque = torqueInput; }
 	void addTorque(double torqueInput) { torque += torqueInput; }
-	double getTorque() { return torque; }
 	void setForce(Vec2d inputForce) { force = inputForce; }
 	Vec2d getForce() const { return force; }
 	void update( double dt, const KinData& vehicleKinData, Vec2d force);
